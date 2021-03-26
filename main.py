@@ -127,7 +127,7 @@ d = 3
 A = [[-2, 1, 0], [1, -2, 1], [0, 1, -2]]
 b = [-14, 14, -2]
 c = -23.5
-population_size = 50
+population_size = 100
 crossover_prob = 0.9
 mutation_prob = 0.05
 iterations = 1000
@@ -154,8 +154,11 @@ for count in range(iterations):
     pop_matrix = reverse_gray(pop_matrix_b,d,dimensions,population_size)
 
 print(pop_matrix)
-print(score(pop_matrix,A,b,c))
+temp = np.array(score(pop_matrix,A,b,c))
+print(temp.max())
 
+# final = dict(zip(pop_matrix,temp.T))
+# print(final)
 # matA = [[-7,-6,-5],[8,9,10]]
 # temp = to_gray(matA,3,3,2)
 # print(temp)
