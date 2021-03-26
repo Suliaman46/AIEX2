@@ -39,7 +39,7 @@ def pop_init(d,dimensions,population_size):
         for j in range(dimensions):
             temp = np.random.randint(j - 2 ** d, 2 ** d)
             pop_d.append(temp)
-            pop_b.append(to_gray_mod(temp, j - 2 ^ d, '0' + str((2 ** d) // 2)))
+            pop_b.append(to_gray_mod(temp, -(j - 2 ** d)-1, '0' + str((2 ** d) // 2)))
     return pop_b,pop_d
 
 def to_gray_mod(num_i,shift,bit_len):
@@ -52,7 +52,7 @@ def to_gray(matrix,d,dimensions,population_size):
     pop_b = []
     for i in range(population_size):
         for j in range(dimensions):
-            pop_b.append(to_gray_mod(matrix[i][j], j - 2 ^ d, '0' + str((2 ** d) // 2)))
+            pop_b.append(to_gray_mod(matrix[i][j], -(j - 2 ** d) - 1, '0' + str((2 ** d) // 2)))
     pop_b = np.array(pop_b).reshape(population_size,dimensions)
     return pop_b
 
@@ -68,23 +68,19 @@ def reverse_gray(matrix,d,dimensions,population_size):
     pop_d = []
     for i in range(population_size):
         for j in range(dimensions):
-            pop_d.append(inverse_gray_mod(matrix[i][j], j - 2 ^ d))
+            pop_d.append(inverse_gray_mod(matrix[i][j], -(j - 2 ** d)-1))
     pop_d = np.array(pop_d).reshape(population_size,dimensions)
     return pop_d
 
 def score(pop_matrix,A,b,c): #Argument is matrix with size: population x dimensions
     score = []
-    if len(pop_matrix)== 150:
-        pop_matrix = np.array(pop_matrix).reshape(50,3)
     for i in range (len(pop_matrix)):
         score.append(float(func(A,b,c,pop_matrix[i,:])))
     return score
 
 
 def roulette_wheel(pop_matrix,A,b,c): # Argument is matrix with size : population x dimensions
-    score_ar = []
-    if len(pop_matrix) == 150:
-        pop_matrix = np.array(pop_matrix).reshape(50, 3)
+
     score_ar = np.array(score(pop_matrix,A,b,c))
     score_ar = (score_ar - score_ar.min())/(score_ar.max() - score_ar.min())
 
@@ -135,32 +131,24 @@ population_size = 50
 crossover_prob = 0.9
 mutation_prob = 0.05
 iterations = 1000
+A = np.array(A).reshape(3,3)
+b= np.array(b)
 
-A = np.matrix(A)
-b = np.array(b)
 
 [pop_b,pop_d] = pop_init(d,dimensions,population_size)
 pop_matrix = np.array(pop_d).reshape(population_size,dimensions)
 pop_matrix_b = np.array(pop_b).reshape(population_size,dimensions)
 
-#Not sure
-for count in range(80):
+
+# Not sure
+for count in range(iterations):
     pop_matrix = roulette_wheel(pop_matrix,A,b,c)
     pop_matrix_b = to_gray(pop_matrix,d,dimensions,population_size)
     children = np.empty((1,1),str)
-    # children = []
-    # for i in range (0,population_size,2):
-    #     child1,child2 = crossover(crossover_prob,pop_matrix_b[i],pop_matrix_b[i+1])
-    #     child1 = mutation(child1,mutation_prob)
-    #     child2 = mutation(child2,mutation_prob)
-    #     children.append(child1)
-    #     children.append(child2)
     for i in range (0,population_size,2):
         for child in crossover(crossover_prob, pop_matrix_b[i], pop_matrix_b[i + 1]):
             child = mutation(child,mutation_prob)
-            # children.append(child)
             children = np.append(children,child)
-    # np.array(children).reshape()
     children = np.delete(children,0)
     pop_matrix_b = np.array(children).reshape(population_size,dimensions)
     pop_matrix = reverse_gray(pop_matrix_b,d,dimensions,population_size)
@@ -168,13 +156,39 @@ for count in range(80):
 print(pop_matrix)
 print(score(pop_matrix,A,b,c))
 
+# matA = [[-7,-6,-5],[8,9,10]]
+# temp = to_gray(matA,3,3,2)
+# print(temp)
+# print()
+# print(reverse_gray(temp,3,3,2))
+#
+# print('\n\n\n')
+# # num = to_gray_mod(-6,7,'08')
+# # print(num)
+#
+# print(inverse_gray_mod('0111',7))
+# print(inverse_gray_mod('0000',6))
+# print(inverse_gray_mod('0001',5))
+# print(inverse_gray_mod('1000',7))
+# print(inverse_gray_mod('1000',6))
+# print(inverse_gray_mod('1000',5))
+
+
+# print(to_gray_mod(-2,7,'04'))
+# print(inverse_gray_mod('0111',7))
 
 
 
+# print(pop_matrix)
+# print(score(pop_matrix,A,b,c))
 
-
-
-
+# pop_matrix = [[1,1,1],[2,2,2],[3,3,3]]
+# pop_matrix = np.array(pop_matrix).reshape(3,3)
+# prob_ar = [0.05,0.1,0.85]
+#
+# i = np.random.choice(pop_matrix.shape[0], size=3, p=prob_ar)
+# print(i)
+# print(pop_matrix[i])
 # print(roulette_wheel(pop_matrix,A,b,c))
 
 # print(pop_matrix_b[0])
