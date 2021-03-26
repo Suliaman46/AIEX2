@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import pprint
 
 
 def func(a, b, c, x):  # Calculating value of function at x
@@ -151,8 +152,8 @@ def mutation(indiv, prob):
         mutated_str.append(mut_str[i:i + m])
     return np.array(mutated_str)
 
-'''
-#Numbers for testing #Main testing
+
+#Numbers for testing
 dimensions = 3 # n
 d = 3
 A = [[-2, 1, 0], [1, -2, 1], [0, 1, -2]]
@@ -164,18 +165,17 @@ mutation_prob = 0.05
 iterations = 1000
 A = np.array(A).reshape(3,3)
 b = np.array(b)
-'''
 
 
-population_size, crossover_prob, mutation_prob, iterations, d, dimensions = get_param()
-A, b, c = get_func_coeff(dimensions)
+#For custom data input
+# population_size, crossover_prob, mutation_prob, iterations, d, dimensions = get_param()
+# A, b, c = get_func_coeff(dimensions)
 
 [pop_b,pop_d] = pop_init(d, dimensions, population_size)
 pop_matrix = np.array(pop_d).reshape(population_size, dimensions)
 pop_matrix_b = np.array(pop_b).reshape(population_size, dimensions)
 
 
-# Not sure
 for count in range(iterations):
     pop_matrix = roulette_wheel(pop_matrix, A, b, c)
     pop_matrix_b = to_gray(pop_matrix, d, dimensions, population_size)
@@ -188,84 +188,11 @@ for count in range(iterations):
     pop_matrix_b = np.array(children).reshape(population_size, dimensions)
     pop_matrix = reverse_gray(pop_matrix_b, d, dimensions, population_size)
 
-print(pop_matrix)
+
 print(max(score(pop_matrix, A, b, c)))
-
-# matA = [[-7,-6,-5],[8,9,10]]
-# temp = to_gray(matA,3,3,2)
-# print(temp)
-# print()
-# print(reverse_gray(temp,3,3,2))
-#
-# print('\n\n\n')
-# # num = to_gray_mod(-6,7,'08')
-# # print(num)
-#
-# print(inverse_gray_mod('0111',7))
-# print(inverse_gray_mod('0000',6))
-# print(inverse_gray_mod('0001',5))
-# print(inverse_gray_mod('1000',7))
-# print(inverse_gray_mod('1000',6))
-# print(inverse_gray_mod('1000',5))
+final_dct = {}
+for i in range (len(pop_matrix)):
+    final_dct[tuple(pop_matrix[i])] = func(A,b,c,pop_matrix[i])
+pprint.pprint(final_dct)
 
 
-# print(to_gray_mod(-2,7,'04'))
-# print(inverse_gray_mod('0111',7))
-
-
-
-# print(pop_matrix)
-# print(score(pop_matrix,A,b,c))
-
-# pop_matrix = [[1,1,1],[2,2,2],[3,3,3]]
-# pop_matrix = np.array(pop_matrix).reshape(3,3)
-# prob_ar = [0.05,0.1,0.85]
-#
-# i = np.random.choice(pop_matrix.shape[0], size=3, p=prob_ar)
-# print(i)
-# print(pop_matrix[i])
-# print(roulette_wheel(pop_matrix,A,b,c))
-
-# print(pop_matrix_b[0])
-# print(pop_matrix_b[1])
-
-# print(pop_matrix_b[1][1][:2])
-# print(crossover(pop_matrix_b[0],pop_matrix_b[1],crossover_prob))
-
-# indiv = pop_matrix_b[0]
-
-# print(mutation(indiv,1))
-
-# vfunc = np.vectorize(to_gray_mod)
-# print(vfunc([[1,2,3],[4,5,6]],5,'8'))
-# y = [1,2,3,4]
-# probA = [0.1,0.2,0.3,0.4]
-# indices = np.random.choice(y, size=4, p=probA)
-# print(indices)
-# # print(indices)
-
-# print(pop_matrix[indices])
-
-# test = np.array(roulette_wheel(pop_matrix,A,b,c))
-# print(test)
-
-#pop_vec = np.array(pop).reshape(population_size,dimensions)
-#print(pop_vec)
-#pop_array = np.array(pop)
-# pop_array = np.array([0,1,2,-1])
-# bin_nums = ((pop_array.reshape(-1,1) & (2**np.arange(8))) != 0).astype(int)
-# #print(bin_nums)
-# final = bin_nums[:,::-1]
-# print(final)
-
-
-
-
-# num =7
-# num = num^(num>>1)
-#
-# x = format(num,'08b')
-# print(x)
-
-# print(to_gray_mod(10,7,'08'))
-# print(inverse_gray_mod(to_gray_mod(10,7,'08'),7))
